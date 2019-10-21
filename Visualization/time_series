@@ -1,0 +1,61 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Aug 24 12:08:44 2019
+
+@author: N Foundation
+"""
+import pandas as pd
+from matplotlib import pyplot
+
+#Import Data
+series = pd.Series.from_csv('temp1.csv', header=0)
+print(series.head())
+
+# Time series Line Plot
+series.plot()
+pyplot.show()
+
+series.plot(style='k.')
+pyplot.show()
+
+#density plot
+series.plot(kind='kde')
+pyplot.show()
+
+#histogram
+series.hist()
+pyplot.show()
+
+
+#annual time series plot
+from pandas import DataFrame
+from pandas import TimeGrouper
+from matplotlib import pyplot
+series = Series.from_csv('temp1.csv', header=0)
+groups = series.groupby(TimeGrouper('A'))
+years = DataFrame()
+for name, group in groups:
+	years[name.year] = group.values
+years.plot(subplots=True, legend=False)
+pyplot.show()
+
+#box and whisker plots by year
+for name, group in groups:
+	years[name.year] = group.values
+years.boxplot()
+pyplot.show()
+
+#box and whisker plots by month
+from pandas import Series
+from pandas import DataFrame
+from pandas import TimeGrouper
+from matplotlib import pyplot
+from pandas import concat
+series = Series.from_csv('temp1.csv', header=0)
+one_year = series['1990']
+groups = one_year.groupby(TimeGrouper('M'))
+months = concat([DataFrame(x[1].values) for x in groups], axis=1)
+months = DataFrame(months)
+months.columns = range(1,13)
+months.boxplot()
+pyplot.show()
