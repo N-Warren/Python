@@ -1,0 +1,48 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Fri Aug 23 23:25:28 2019
+
+@author: N Foundation
+"""
+	
+# Descriptive Statistics
+import pandas
+url = "https://raw.githubusercontent.com/jbrownlee/Datasets/master/pima-indians-diabetes.data.csv"
+names = ['preg', 'plas', 'pres', 'skin', 'test', 'mass', 'pedi', 'age', 'class']
+data = pandas.read_csv(url, names=names)
+top20 = data.head(20)
+print(top20)
+
+# Print Shape of Data File
+shape = data.shape
+print(shape)
+
+#Print Variable Data Types
+types = data.dtypes
+print(types)
+
+#Print Basic Statistics on Data Set
+pandas.set_option('display.width', 100)
+pandas.set_option('precision', 3)
+description = data.describe()
+print(description)
+data['preg'].describe()
+data.median()
+data.var()
+
+#Print Counts for Each Class
+class_counts = data.groupby('class').size()
+print(class_counts)
+
+#Print Pearson Correlations for Variables
+pandas.set_option('display.width', 100)
+pandas.set_option('precision', 3)
+correlations = data.corr(method='pearson')
+print(correlations)
+
+#Print Skew and Kurtosis Numbers 
+skew = data.skew()
+print(skew)
+
+kurtosis=data.kurt()
+print(kurtosis)
