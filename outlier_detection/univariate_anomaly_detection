@@ -1,0 +1,56 @@
+#Parametric and nonparametric methods for univariate anomaly detection
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+import matplotlib
+from scipy.stats import zscore
+
+# Generate sample data
+dataset = pd.read_csv('irisdataset.csv')
+dataset.head()
+
+dataset.describe()
+
+# Distribution of Sepal Length
+plt.scatter(range(dataset.shape[0]), np.sort(dataset['sepallength'].values))
+plt.xlabel('observation')
+plt.ylabel('sepallength')
+plt.title("sepallength values")
+
+sns.distplot(dataset['sepallength'])
+plt.title("Distribution of Sepallength")
+sns.despine()
+
+print("Skewness: %f" % dataset['sepallength'].skew())
+print("Kurtosis: %f" % dataset['sepallength'].kurt())
+
+#Z Score
+dataset["sepallength_zscore"] = zscore(dataset["sepallength"])
+dataset.head()
+dataset["is_outlier"] = dataset["sepallength_zscore"].apply(
+  lambda x: x <= -2.5 or x >= 2.5
+)
+
+dataset[dataset["is_outlier"]]
+
+#Box Plots and Interquartile Range
+sns.boxplot(data=dataset)
+
+#Nonparametric Univariate Test
+from sklearn.ensemble import IsolationForest
+isolation_forest = IsolationForest(n_estimators=100)
+isolation_forest.fit(dataset['sepallength'].values.reshape(-1, 1))
+xx = np.linspace(dataset['sepallength'].min(), dataset['sepallength'].max(), len(dataset)).reshape(-1,1)
+anomaly_score = isolation_forest.decision_function(xx)
+outlier = isolation_forest.predict(xx)
+plt.figure(figsize=(10,4))
+plt.plot(xx, anomaly_score, label='anomaly score')
+plt.fill_between(xx.T[0], np.min(anomaly_score), np.max(anomaly_score), 
+                 where=outlier==-1, color='r', 
+                 alpha=.4, label='outlier region')
+plt.legend()
+plt.ylabel('anomaly score')
+plt.xlabel('sepallength')
+plt.show();
