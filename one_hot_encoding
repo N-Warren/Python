@@ -1,0 +1,41 @@
+@author: N Foundation
+"""
+import numpy as np 
+import pandas as pd 
+from sklearn.preprocessing import OneHotEncoder 
+from sklearn.preprocessing import LabelEncoder 
+
+# Example 1: One hot encoding for categorical data already label encoded
+# Import the data required 
+data = pd.read_csv('C:/Users/N Foundation/Documents/Python Scripts/region_score.csv')
+print(data) 
+
+# One hot encode object with categorical feature 0 
+onehotencoder = OneHotEncoder(categorical_features = [0]) 
+data = onehotencoder.fit_transform(data).toarray() 
+print(data)
+
+# Example 2: Integer and One Hot Encoding for Categorical Data
+# Import the data required 
+data = pd.read_csv('C:/Users/N Foundation/Documents/Python Scripts/color_country.csv')
+print(data) 
+
+# Label Encoding of feature 0 and 1
+le = LabelEncoder() 
+  
+data['color']= le.fit_transform(data['color']) 
+data['country']= le.fit_transform(data['country']) 
+print(data)
+
+# One hot encode feature 0 and 1 
+onehotencoder = OneHotEncoder() 
+  
+data = onehotencoder.fit_transform(data).toarray() 
+print(data)
+
+# Example 2 Alternative for Dummy Encoding 
+data = pd.read_csv('C:/Users/N Foundation/Documents/Python Scripts/color_country.csv')
+print(data) 
+
+data = pd.get_dummies(data, columns=['color','country'])
+print(data)
